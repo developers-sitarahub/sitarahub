@@ -31,6 +31,21 @@ export default function Home() {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      if (hash) {
+        const id = hash.replace('#', '');
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 500); // 500ms delay to ensure dynamic sections have fully mounted
+      }
+    }
+  }, [isLoading]);
+
   return (
     <>
       {/* Noise texture overlay */}

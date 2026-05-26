@@ -28,8 +28,19 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change (hash link click)
-  const handleNavClick = () => setMobileOpen(false);
+  // Close mobile menu on route change and scroll smoothly for homepage hash links
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setMobileOpen(false);
+    if (href.startsWith('/#') && typeof window !== 'undefined' && window.location.pathname === '/') {
+      e.preventDefault();
+      const id = href.replace('/#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', href);
+      }
+    }
+  };
 
   return (
     <>
@@ -65,7 +76,7 @@ export function Navigation() {
           {/* Brand Logo & Wordmark */}
           <Link
             href="/"
-            onClick={handleNavClick}
+            onClick={() => setMobileOpen(false)}
             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', cursor: 'none' }}
           >
             <Logo iconSize={40} fontSize="1.25rem" showSubtitle={false} />
@@ -77,6 +88,7 @@ export function Navigation() {
               <a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 style={{
                   fontSize: '0.68rem',
                   fontWeight: 500,
@@ -95,6 +107,7 @@ export function Navigation() {
 
             <a
               href="/#contact"
+              onClick={(e) => handleNavClick(e, '/#contact')}
               className="btn-primary"
               style={{ borderRadius: 4, fontSize: '0.65rem', padding: '0.6rem 1.25rem', cursor: 'none' }}
             >
@@ -172,7 +185,7 @@ export function Navigation() {
               <a
                 key={item.label}
                 href={item.href}
-                onClick={handleNavClick}
+                onClick={(e) => handleNavClick(e, item.href)}
                 style={{
                   fontSize: '1.1rem',
                   fontWeight: 700,
@@ -193,7 +206,7 @@ export function Navigation() {
             ))}
             <a
               href="/#contact"
-              onClick={handleNavClick}
+              onClick={(e) => handleNavClick(e, '/#contact')}
               className="btn-primary"
               style={{ marginTop: '1.5rem', borderRadius: 4, textAlign: 'center', justifyContent: 'center', fontSize: '0.75rem' }}
             >
