@@ -81,8 +81,10 @@ export const metadata: Metadata = {
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
+    shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
+  manifest: '/site.webmanifest',
   verification: {
     google: 'ifZqGwdLWSJ2Ew_KBzVJrny5Ynj75H4UGZJECuE5y-Y',
   },
