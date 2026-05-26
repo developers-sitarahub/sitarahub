@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({
@@ -82,6 +83,9 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
+  verification: {
+    google: 'ifZqGwdLWSJ2Ew_KBzVJrny5Ynj75H4UGZJECuE5y-Y',
+  },
 }
 
 export default function RootLayout({
@@ -92,6 +96,19 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ background: '#0a0a0a' }}>
       <body className={`${inter.variable} antialiased`} style={{ background: '#0a0a0a' }}>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-JW2P442WNX"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-JW2P442WNX');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
