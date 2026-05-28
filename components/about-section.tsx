@@ -114,6 +114,7 @@ export function AboutSection() {
         ref={ref}
       >
         <div
+          className="about-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -261,6 +262,17 @@ export function AboutSection() {
           </div>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          #about {
+            padding: 5rem 0 !important;
+          }
+          .about-grid {
+            grid-template-columns: 1fr !important;
+            gap: 3rem !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

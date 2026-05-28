@@ -246,7 +246,7 @@ export function ServicesSection() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))',
             gap: '1px',
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.04)',
@@ -260,6 +260,7 @@ export function ServicesSection() {
         {/* Stats */}
         <div
           ref={statsRef}
+          className="services-stats-grid"
           style={{
             marginTop: '6rem',
             display: 'grid',
@@ -309,6 +310,18 @@ export function ServicesSection() {
           ))}
         </div>
       </div>
+      <style>{`
+        @media (max-width: 800px) {
+          .services-stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .services-stats-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

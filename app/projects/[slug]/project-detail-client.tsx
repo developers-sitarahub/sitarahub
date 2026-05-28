@@ -176,6 +176,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               <motion.div
                 custom={4}
                 variants={fadeInUp}
+                className="hero-stats-dashboard"
                 style={{
                   display: 'flex',
                   gap: '3rem',
@@ -196,7 +197,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                     {project.statLabel}
                   </div>
                 </div>
-                <div style={{ width: 1, height: '40px', background: 'rgba(255,255,255,0.08)' }} />
+                <div className="hero-stats-divider" style={{ width: 1, height: '40px', background: 'rgba(255,255,255,0.08)' }} />
                 <a
                   href={project.url}
                   target="_blank"
@@ -475,6 +476,23 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
           .casestudy-grid {
             grid-template-columns: 1fr !important;
             gap: 4rem !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .hero-stats-dashboard {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1.5rem !important;
+            width: 100% !important;
+            padding: 1.25rem 1.5rem !important;
+          }
+          .hero-stats-divider {
+            display: none !important;
+          }
+          .hero-stats-dashboard a {
+            width: 100% !important;
+            justify-content: center !important;
+            display: flex !important;
           }
         }
       `}</style>

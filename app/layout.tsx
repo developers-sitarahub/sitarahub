@@ -12,8 +12,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://sitarahub.com'),
-  title: 'Sitarahub | Premium Software Development & Web Studio',
-  description: 'Branding, web development, ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+  title: {
+    template: '%s | Sitarahub',
+    default: 'Sitarahub | Premium Software Development & Web Studio',
+  },
+  description: 'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
   keywords: [
     'web development',
     'ERP solutions',
@@ -54,7 +57,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Sitarahub | Premium Software Development & Web Studio',
-    description: 'Branding, web development, ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+    description: 'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
     url: 'https://sitarahub.com',
     siteName: 'Sitarahub',
     locale: 'en_US',
@@ -71,7 +74,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Sitarahub | Premium Software Development & Web Studio',
-    description: 'Branding, web development, ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+    description: 'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
     images: ['/og-image.png'],
   },
   icons: {
@@ -114,63 +117,40 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                '@context': 'https://schema.org',
-                '@type': 'Organization',
-                '@id': 'https://sitarahub.com/#organization',
-                'name': 'Sitarahub Private Limited',
-                'legalName': 'Sitarahub Private Limited',
-                'url': 'https://sitarahub.com',
-                'logo': {
-                  '@type': 'ImageObject',
-                  'url': 'https://sitarahub.com/icon.png',
-                  'caption': 'Sitarahub Logo'
-                },
-                'sameAs': [
-                  'https://www.linkedin.com/company/sitarahub-private-limited/posts/?feedView=all',
-                  'https://wa.me/919119436661'
-                ],
-                'description': 'A premium software development studio specializing in enterprise ERP solutions, custom web applications, mobile platforms, and AI-driven workflow marketing automation.',
-                'foundingDate': '2025-06-18',
-                'address': {
-                  '@type': 'PostalAddress',
-                  'addressLocality': 'Mumbai',
-                  'addressRegion': 'Maharashtra',
-                  'addressCountry': 'IN'
-                },
-                'iso6523': 'CIN U46901MH2025PTC450939'
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              '@id': 'https://sitarahub.com/#organization',
+              'name': 'Sitarahub Private Limited',
+              'legalName': 'Sitarahub Private Limited',
+              'url': 'https://sitarahub.com',
+              'logo': {
+                '@type': 'ImageObject',
+                'url': 'https://sitarahub.com/icon.png',
+                'caption': 'Sitarahub Logo'
               },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'WebSite',
-                '@id': 'https://sitarahub.com/#website',
-                'url': 'https://sitarahub.com',
-                'name': 'Sitarahub',
-                'description': 'Premium Software Development & Web Studio',
-                'publisher': {
-                  '@id': 'https://sitarahub.com/#organization'
-                }
+              'sameAs': [
+                'https://www.linkedin.com/company/sitarahub-private-limited/posts/?feedView=all',
+                'https://wa.me/919119436661',
+                'https://github.com/developers-sitarahub'
+              ],
+              'description': 'A premium software development studio specializing in enterprise ERP solutions, custom web applications, mobile platforms, and AI-driven workflow marketing automation.',
+              'foundingDate': '2025-06-18',
+              'address': {
+                '@type': 'PostalAddress',
+                'addressLocality': 'Mumbai',
+                'addressRegion': 'Maharashtra',
+                'addressCountry': 'IN'
               },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'ProfessionalService',
-                '@id': 'https://sitarahub.com/#service',
-                'name': 'Sitarahub Private Limited',
-                'url': 'https://sitarahub.com',
-                'logo': 'https://sitarahub.com/icon.png',
-                'image': 'https://sitarahub.com/og-image.png',
-                'description': 'Sitarahub is a premium software development studio, building web platforms, custom ERP systems, and AI outreach automations.',
-                'address': {
-                  '@type': 'PostalAddress',
-                  'addressLocality': 'Mumbai',
-                  'addressRegion': 'Maharashtra',
-                  'addressCountry': 'IN'
-                },
-                'priceRange': '$$$',
-                'telephone': '+919119436661'
+              'iso6523': 'CIN U46901MH2025PTC450939',
+              'contactPoint': {
+                '@type': 'ContactPoint',
+                'telephone': '+919119436661',
+                'contactType': 'sales',
+                'areaServed': ['IN', 'US', 'AE', 'GB'],
+                'availableLanguage': ['en', 'hi']
               }
-            ])
+            })
           }}
         />
         {children}

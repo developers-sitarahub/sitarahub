@@ -1,79 +1,100 @@
-'use client';
+import type { Metadata } from 'next';
+import { HomePageClient } from '@/components/home-page-client';
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+export const metadata: Metadata = {
+  title: 'Sitarahub | Premium Software Development & Web Studio',
+  description:
+    'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+  keywords: [
+    'web development',
+    'ERP solutions',
+    'software development studio',
+    'enterprise software development',
+    'premium web design',
+    'WhatsApp marketing automation',
+    'AI cold email marketing',
+    'custom CRM development',
+    'e-commerce development',
+    'Sitarahub',
+    'Sitarahub Private Limited',
+    'premium software studio India',
+    'Mumbai software company',
+    'custom ERP developer',
+    'SaaS development agency'
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Sitarahub | Premium Software Development & Web Studio',
+    description:
+      'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+    url: 'https://sitarahub.com',
+    siteName: 'Sitarahub',
+    locale: 'en_US',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Sitarahub - Premium Software Development Studio',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sitarahub | Premium Software Development & Web Studio',
+    description:
+      'Branding, custom web development, enterprise ERP systems, and digital innovation built as one system. Sitarahub helps ambitious companies launch, scale, and stand out.',
+    images: ['/og-image.png'],
+  },
+};
 
-import { LoadingScreen } from '@/components/loading-screen';
-import { Navigation } from '@/components/navigation';
-import { ProjectsSection } from '@/components/projects-section';
-import { Footer } from '@/components/footer';
-import { CustomCursor } from '@/components/custom-cursor';
-
-const HeroSection = dynamic(() => import('@/components/hero-section').then((m) => m.HeroSection), { ssr: false });
-const AboutSection = dynamic(() => import('@/components/about-section').then((m) => m.AboutSection), { ssr: false });
-const ServicesSection = dynamic(() => import('@/components/services-section').then((m) => m.ServicesSection), { ssr: false });
-const TestimonialsSection = dynamic(() => import('@/components/testimonials-section').then((m) => m.TestimonialsSection), { ssr: false });
-const ContactSection = dynamic(() => import('@/components/contact-section').then((m) => m.ContactSection), { ssr: false });
-
-export default function Home() {
-  // Start false to avoid hydration mismatch; check sessionStorage client-side
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // Only show loader on first-ever visit (per session)
-    if (!sessionStorage.getItem('sitarahub_visited')) {
-      setIsLoading(true);
+export default function HomePage() {
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': 'https://sitarahub.com/#website',
+    'url': 'https://sitarahub.com',
+    'name': 'Sitarahub',
+    'description': 'Premium Software Development & Web Studio',
+    'publisher': {
+      '@id': 'https://sitarahub.com/#organization'
     }
-  }, []);
-
-  const handleLoadComplete = () => {
-    sessionStorage.setItem('sitarahub_visited', '1');
-    setIsLoading(false);
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      const hash = typeof window !== 'undefined' ? window.location.hash : '';
-      if (hash) {
-        const id = hash.replace('#', '');
-        setTimeout(() => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 500); // 500ms delay to ensure dynamic sections have fully mounted
-      }
-    }
-  }, [isLoading]);
+  const professionalServiceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': 'https://sitarahub.com/#service',
+    'name': 'Sitarahub Private Limited',
+    'url': 'https://sitarahub.com',
+    'logo': 'https://sitarahub.com/icon.png',
+    'image': 'https://sitarahub.com/og-image.png',
+    'description': 'Sitarahub is a premium software development studio, building web platforms, custom ERP systems, and AI outreach automations.',
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': 'Mumbai',
+      'addressRegion': 'Maharashtra',
+      'addressCountry': 'IN'
+    },
+    'priceRange': '$$$',
+    'telephone': '+919119436661',
+    'openingHours': 'Mo-Fr 09:00-18:00',
+    'areaServed': ['IN', 'US', 'AE', 'GB'],
+    'knowsAbout': ['Web Development', 'ERP Solutions', 'Software Engineering', 'AI Automation', 'WhatsApp Marketing Automation']
+  };
 
   return (
     <>
-      {/* Noise texture overlay */}
-      <div className="noise-overlay" aria-hidden="true" />
-
-      {/* Custom cursor */}
-      <CustomCursor />
-
-      {/* Loading screen — first visit only */}
-      {isLoading && <LoadingScreen onComplete={handleLoadComplete} />}
-
-      {/* Main site — always rendered (hidden by loader overlay on first visit) */}
-      <main
-        style={{
-          background: '#0a0a0a',
-          minHeight: '100vh',
-          visibility: isLoading ? 'hidden' : 'visible',
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([websiteSchema, professionalServiceSchema])
         }}
-      >
-        <Navigation />
-        <HeroSection />
-        <ProjectsSection />
-        <AboutSection />
-        <ServicesSection />
-        <TestimonialsSection />
-        <ContactSection />
-        <Footer />
-      </main>
+      />
+      <HomePageClient />
     </>
   );
 }
