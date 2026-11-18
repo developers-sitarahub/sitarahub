@@ -124,30 +124,28 @@ export const projects: Project[] = [
   },
   {
     number: '05',
-    name: 'Roop Sari Palace',
-    slug: 'roop-sari-palace',
-    category: 'Indian Ethnic Fashion · USA',
+    name: 'Raffu',
+    slug: 'raffu',
+    category: 'Clothing Alterations Marketplace',
     description:
-      'Premium Shopify store for Indian ethnic wear in the USA — sarees, lehengas, anarkali suits, sherwanis, and men\'s kurta. International market with USD pricing, serving the Indian diaspora in the USA.',
-    tags: ['eCommerce', 'Shopify', 'Fashion', 'USA Market'],
-    url: 'https://www.roopsari.com',
-    color: '#ec4899',
-    year: '2024',
-    stat: 'USA',
-    statLabel: 'Market · Indian Fashion',
-    embedBlocked: true,
-    previewImage: '/roopsari-preview.png',
+      'On-demand booking platform for clothing alterations and invisible mending — customers book fixed-price fittings with vetted local tailoring studios, from everyday hems to lehengas and sherwanis.',
+    tags: ['Marketplace', 'Booking', 'Two-Sided Platform', 'Fashion'],
+    url: 'https://raffu.com',
+    color: '#14b8a6',
+    year: '2026',
+    stat: '24h',
+    statLabel: 'Express Turnaround',
     visualizer: 'ribbon',
     challenge:
-      'Selling custom and heavy Indian bridal ethnic wear to customers in the United States requires high trust, perfect size tailoring, and seamless logistics. Roop Sari Palace needed a gorgeous digital storefront that highlights intricate dress patterns and handles custom measurements and shipping seamlessly.',
+      'Getting clothes altered usually means hunting for a reliable tailor, haggling over price, and chasing updates by phone. Raffu set out to turn that into a trusted, bookable service — which meant building two products at once: a simple booking experience for customers and a portal for independent tailoring studios to receive, manage, and fulfil those orders.',
     solution:
-      'Sitarahub created a premium Shopify Liquid theme featuring optimized image delivery pipelines, an interactive custom measurement configuration tool, and dynamic checkout experiences. We also integrated an automated DHL/FedEx shipping API to handle customs documentation and tracking.',
+      'We built a Next.js booking flow where customers pick a garment category, choose the work needed, upload up to four reference photos, and book instantly or schedule for later. Orders are routed by postcode to the nearest certified partner studio, and each booking issues a QR fitting pass for check-in at the studio. A separate partner studio portal handles incoming jobs, while live order tracking keeps customers updated through 24h express and 48h atelier turnarounds.',
     impact: [
-      'Successfully captured high-ticket Indian diaspora sales in North America.',
-      'Reduced size-related returns by 82% through custom measurement forms.',
-      'Achieved a 40% reduction in cart abandonment through page-load and UI speed-ups.'
+      'Replaced phone-and-walk-in tailoring with fixed upfront pricing and instant online booking.',
+      'Launched a two-sided marketplace: a customer booking app plus a dedicated partner studio portal.',
+      'Covers six garment categories, including specialist ethnic and occasion wear, backed by a free re-fit guarantee.'
     ],
-    tech: ['Shopify Liquid', 'Custom Shopify Apps', 'JavaScript', 'CSS Grid', 'Tailwind CSS', 'FedEx API']
+    tech: ['Next.js', 'React', 'Vercel','QR Fitting Passes', 'Postcode-Based Routing']
   }
 ];
 
