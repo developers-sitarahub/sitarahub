@@ -10,16 +10,17 @@ export interface Project {
   year: string;
   stat: string;
   statLabel: string;
-  embedBlocked?: boolean;
-  previewImage?: string;
-  
+
   // Detailed case study fields
   challenge: string;
   solution: string;
   impact: string[];
   tech: string[];
-  visualizer: 'network' | 'wave' | 'globe' | 'grid' | 'ribbon' | 'wireframe';
 }
+
+/** Screenshot of the live site, captured at 1440x900 (desktop) and 390x844 (mobile). */
+export const projectImage = (p: Pick<Project, 'slug'>) => `/work/${p.slug}.jpg`;
+export const projectMobileImage = (p: Pick<Project, 'slug'>) => `/work/${p.slug}-mobile.jpg`;
 
 export const projects: Project[] = [
   {
@@ -35,7 +36,6 @@ export const projects: Project[] = [
     year: '2025',
     stat: '10x',
     statLabel: 'Message Throughput',
-    visualizer: 'network',
     challenge:
       'Enterprise sales teams and customer support desks frequently struggle with slow message response times and disjointed communication channels. The challenge was to build an enterprise-grade customer relationship manager directly integrated with Meta’s Business Cloud API, supporting high concurrency, real-time sync, and complex automated workflow logic.',
     solution:
@@ -60,7 +60,6 @@ export const projects: Project[] = [
     year: '2025',
     stat: '3x',
     statLabel: 'Reply Rate',
-    visualizer: 'wave',
     challenge:
       'Cold email outreach campaigns often suffer from low engagement due to generic messaging and poor domain reputation setups. The client needed a platform capable of scaling to thousands of personalized emails a day while avoiding spam filters and ensuring high inbox placement.',
     solution:
@@ -85,7 +84,6 @@ export const projects: Project[] = [
     year: '2025',
     stat: '500+',
     statLabel: 'Brands Onboarded',
-    visualizer: 'globe',
     challenge:
       "To connect India's top franchise brands with prospective regional and master franchise partners, a massive digital hub was needed. The portal required catalog navigation across 12 industries, exhibitor booths management, lead generation tools, and live deal coordination for a large physical/digital hybrid summit.",
     solution:
@@ -110,7 +108,6 @@ export const projects: Project[] = [
     year: '2025',
     stat: '50K+',
     statLabel: 'Concurrent Users',
-    visualizer: 'grid',
     challenge:
       "The Indo Global Trade Fair connects micro, small, and medium businesses (MSMEs) with foreign trade delegates. The portal required a highly optimized directory and live buyer-seller negotiation channels that could sustain huge traffic spikes during global trading hours.",
     solution:
@@ -128,16 +125,15 @@ export const projects: Project[] = [
     slug: 'raffu',
     category: 'Clothing Alterations Marketplace',
     description:
-      'On-demand booking platform for clothing alterations and invisible mending — customers book fixed-price fittings with vetted local tailoring studios, from everyday hems to lehengas and sherwanis.',
+      'On-demand booking platform for clothing alterations and invisible mending. Customers book fixed-price fittings with vetted local tailoring studios, from everyday hems to lehengas and sherwanis.',
     tags: ['Marketplace', 'Booking', 'Two-Sided Platform', 'Fashion'],
     url: 'https://raffu.com',
     color: '#14b8a6',
     year: '2026',
     stat: '24h',
     statLabel: 'Express Turnaround',
-    visualizer: 'ribbon',
     challenge:
-      'Getting clothes altered usually means hunting for a reliable tailor, haggling over price, and chasing updates by phone. Raffu set out to turn that into a trusted, bookable service — which meant building two products at once: a simple booking experience for customers and a portal for independent tailoring studios to receive, manage, and fulfil those orders.',
+      'Getting clothes altered usually means hunting for a reliable tailor, haggling over price, and chasing updates by phone. Raffu set out to turn that into a trusted, bookable service, which meant building two products at once: a simple booking experience for customers and a portal for independent tailoring studios to receive, manage, and fulfil those orders.',
     solution:
       'We built a Next.js booking flow where customers pick a garment category, choose the work needed, upload up to four reference photos, and book instantly or schedule for later. Orders are routed by postcode to the nearest certified partner studio, and each booking issues a QR fitting pass for check-in at the studio. A separate partner studio portal handles incoming jobs, while live order tracking keeps customers updated through 24h express and 48h atelier turnarounds.',
     impact: [

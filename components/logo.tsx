@@ -9,6 +9,8 @@ interface LogoProps {
   showSubtitle?: boolean;
   subtitleText?: string;
   direction?: 'row' | 'column';
+  /** 'ink' for light backgrounds, 'light' for dark ones (e.g. the footer). */
+  tone?: 'ink' | 'light';
 }
 
 export function Logo({
@@ -18,8 +20,10 @@ export function Logo({
   showSubtitle = true,
   subtitleText = 'Software Studio',
   direction = 'row',
+  tone = 'ink',
 }: LogoProps) {
   const isVertical = direction === 'column';
+  const base = tone === 'ink' ? '#161513' : '#f4f1ea';
 
   return (
     <div
@@ -29,6 +33,7 @@ export function Logo({
         alignItems: isVertical ? 'center' : 'center',
         gap: isVertical ? '0.5rem' : '0.4rem',
         textAlign: isVertical ? 'center' : 'left',
+        color: base,
       }}
     >
       {/* Coded SVG Logo Icon */}
@@ -93,9 +98,9 @@ export function Logo({
           <span
             style={{
               fontSize: fontSize,
-              fontWeight: 800,
+              fontWeight: 700,
               letterSpacing: '-0.02em',
-              color: '#f5f0e9',
+              color: base,
               fontFamily: "var(--font-sans), sans-serif",
             }}
           >
@@ -107,7 +112,7 @@ export function Logo({
                 fontSize: '0.42rem',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: 'rgba(245, 240, 233, 0.25)',
+                color: tone === 'ink' ? '#807b71' : 'rgba(244, 241, 234, 0.5)',
                 fontFamily: 'monospace',
                 marginTop: '4px',
               }}

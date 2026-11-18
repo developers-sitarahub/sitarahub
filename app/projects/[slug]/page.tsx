@@ -1,4 +1,4 @@
-import { projects } from '@/lib/projects-data';
+import { projects, projectImage } from '@/lib/projects-data';
 import { notFound } from 'next/navigation';
 import { ProjectDetailClient } from './project-detail-client';
 import type { Metadata } from 'next';
@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
 
-  const imageUrl = project.previewImage || '/og-image.png';
+  const imageUrl = projectImage(project);
 
   return {
-    title: `${project.name} Case Study | Sitarahub Premium Software Studio`,
-    description: `Case study for ${project.name} (${project.category}) built by Sitarahub. Discover the challenge, custom software solution, and technical impact.`,
+    title: `${project.name} case study`,
+    description: `How Sitarahub planned and built ${project.name}, a ${project.category.toLowerCase()} project: the brief, what we built and the results.`,
     keywords: [...project.tags, 'case study', 'software development', 'enterprise solution', 'Sitarahub case study'],
     alternates: {
       canonical: `/projects/${slug}`,
@@ -73,7 +73,7 @@ export default async function ProjectPage({ params }: PageProps) {
       'url': 'https://sitarahub.com'
     },
     'datePublished': `${project.year}-01-01`,
-    'image': project.previewImage ? `https://sitarahub.com${project.previewImage}` : 'https://sitarahub.com/og-image.png',
+    'image': `https://sitarahub.com${projectImage(project)}`,
     'keywords': project.tags.join(', '),
     'about': {
       '@type': 'Thing',
