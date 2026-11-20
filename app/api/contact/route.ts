@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { sendToSheet, backupToCsv } from '@/lib/sheets';
 
-// ==========================================
-// GOOGLE SHEETS CONFIGURATION
-// Paste your Google Apps Script Web App URL below to sync submissions online:
-// Example: 'https://script.google.com/macros/s/AKfycbz.../exec'
-// ==========================================
+// Google Apps Script web app that appends each enquiry to the contact sheet.
 const GOOGLE_SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyOVLhULF-hrcWwsA8Gvy3yPv9sU1UapSpBNLRvHUag6HcJXd7A2gtiW1pSpnUbgWlvzg/exec';
 
 export async function POST(request: Request) {
@@ -22,65 +17,34 @@ export async function POST(request: Request) {
       );
     }
 
-    const filePath = path.join(process.cwd(), 'projects.csv');
-
     // Get timestamp in India Standard Time (IST)
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
-    // Helper to escape values for CSV compatibility in Excel
-    const escapeCsv = (val: string) => {
-      const escaped = String(val).replace(/"/g, '""');
-      return `"${escaped}"`;
-    };
-
-    const row = [
-      escapeCsv(timestamp),
-      escapeCsv(name),
-      escapeCsv(email),
-      escapeCsv(company || ''),
-      escapeCsv(service),
-      escapeCsv(phone),
-      escapeCsv(message)
-    ].join(',');
-
-    // 1. Save locally to CSV (Backup)
-    let fileExists = false;
+    // 1. Google Sheets is the source of truth: if it fails, tell the visitor instead of losing the lead.
     try {
-      fs.accessSync(filePath);
-      fileExists = true;
-    } catch {
-      // File does not exist
+      await sendToSheet(GOOGLE_SHEETS_WEBHOOK_URL, {
+        timestamp,
+        name,
+        email,
+        company: company || '',
+        service,
+        phone,
+        message,
+      });
+    } catch (err) {
+      console.error('Contact form: Google Sheets sync failed:', err);
+      return NextResponse.json(
+        { error: 'We couldn’t save your message just now. Please try again, or email developers@sitarahub.com.' },
+        { status: 502 }
+      );
     }
 
-    if (!fileExists) {
-      const headers = 'Timestamp,Full Name,Email Address,Company Name,Service Required,Phone Number,Project Brief\n';
-      fs.writeFileSync(filePath, headers + row + '\n', 'utf8');
-    } else {
-      fs.appendFileSync(filePath, row + '\n', 'utf8');
-    }
-
-    // 2. Sync to Google Sheets online if URL is configured
-    if (GOOGLE_SHEETS_WEBHOOK_URL) {
-      try {
-        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            timestamp,
-            name,
-            email,
-            company: company || '',
-            service,
-            phone,
-            message
-          }),
-          mode: 'no-cors' // Prevent CORS preflight issues
-        });
-      } catch (err) {
-        console.error('Failed to sync to Google Sheets online:', err);
-        // We do not fail the request if Google Sheets is down, since local backup succeeded
-      }
-    }
+    // 2. Local CSV copy (best effort; skipped on read-only hosts).
+    backupToCsv(
+      'projects.csv',
+      'Timestamp,Full Name,Email Address,Company Name,Service Required,Phone Number,Project Brief',
+      [timestamp, name, email, company || '', service, phone, message]
+    );
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

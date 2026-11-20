@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Logo } from './logo';
+import { magnetic } from '@/lib/magnetic';
 
 const navItems = [
   { label: 'Work', href: '/#projects' },
@@ -15,10 +16,18 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [away, setAway] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      // Hide while reading down the page, bring back on any scroll up.
+      if (Math.abs(y - lastY) > 6) setAway(y > lastY && y > 160);
+      lastY = y;
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -28,7 +37,7 @@ export function Navigation() {
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className={`site-nav${scrolled || open ? ' is-scrolled' : ''}`}>
+    <header className={`site-nav${scrolled || open ? ' is-scrolled' : ''}${away && !open ? ' is-away' : ''}`}>
       <div className="wrap site-nav-inner">
         <Link href="/" aria-label="Sitarahub — home" style={{ display: 'flex', textDecoration: 'none' }}>
           <Logo iconSize={34} fontSize="1.2rem" showSubtitle={false} />
@@ -45,7 +54,7 @@ export function Navigation() {
               {item.label}
             </a>
           ))}
-          <a href="/#contact" className="btn" style={{ padding: '0.65rem 1.05rem', fontSize: '0.9rem' }}>
+          <a href="/#contact" className="btn magnetic" {...magnetic} style={{ padding: '0.65rem 1.05rem', fontSize: '0.9rem' }}>
             Get in touch
           </a>
         </nav>

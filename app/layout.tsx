@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google'
+import { Geist, Geist_Mono, Instrument_Serif, Newsreader } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import './globals.css'
+import { SmoothScroll } from '@/components/smooth-scroll'
 
 const sans = Geist({
   subsets: ['latin'],
@@ -15,6 +16,14 @@ const serif = Instrument_Serif({
   weight: '400',
   style: ['normal', 'italic'],
   variable: '--font-serif',
+  display: 'swap',
+});
+
+// Text serif for small serif labels, where the display serif gets cramped.
+const textSerif = Newsreader({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--font-text-serif',
   display: 'swap',
 });
 
@@ -113,7 +122,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${textSerif.variable} ${mono.variable}`}>
       <body>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-JW2P442WNX"
@@ -167,6 +176,7 @@ export default function RootLayout({
             })
           }}
         />
+        <SmoothScroll />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

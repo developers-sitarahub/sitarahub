@@ -1,3 +1,8 @@
+import { Reveal } from '@/components/reveal';
+import { SpotCard } from '@/components/spot-card';
+import { Globe, Workflow, CalendarRange, Megaphone, ShoppingBag, LifeBuoy } from 'lucide-react';
+
+const icons = [Globe, Workflow, CalendarRange, Megaphone, ShoppingBag, LifeBuoy];
 const services = [
   {
     title: 'Web applications',
@@ -39,9 +44,9 @@ const services = [
 
 export function ServicesSection() {
   return (
-    <section id="services" className="section" style={{ background: 'var(--paper-2)' }}>
+    <section id="services" className="section services-bg">
       <div className="wrap">
-        <div className="section-head">
+        <Reveal className="section-head">
           <p className="label">Services</p>
           <div>
             <h2 className="h2" style={{ maxWidth: '15em' }}>
@@ -52,25 +57,27 @@ export function ServicesSection() {
               nothing gets lost in a handover.
             </p>
           </div>
-        </div>
+        </Reveal>
 
-        <div>
-          {services.map((service, i) => (
-            <div key={service.title} className="service-row">
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'baseline' }}>
-                <span className="num">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="h3" style={{ fontSize: '1.6rem' }}>
-                  {service.title}
-                </h3>
-              </div>
-              <p className="body">{service.description}</p>
-              <ul className="service-list" aria-label={`${service.title} includes`}>
-                {service.includes.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="service-grid">
+          {services.map((service, i) => {
+            const Icon = icons[i];
+            return (
+              <SpotCard key={service.title} className="service-card" delay={(i % 3) * 0.08}>
+                <div className="service-top">
+                  <span className="service-icon"><Icon size={22} strokeWidth={1.5} /></span>
+                  <span className="service-num">{String(i + 1).padStart(2, '0')}</span>
+                </div>
+                <h3 className="h3" style={{ fontSize: '1.7rem', marginTop: '1.75rem' }}>{service.title}</h3>
+                <p className="body" style={{ marginTop: '0.75rem' }}>{service.description}</p>
+                <ul className="service-chips" aria-label={`${service.title} includes`}>
+                  {service.includes.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </SpotCard>
+            );
+          })}
         </div>
       </div>
     </section>

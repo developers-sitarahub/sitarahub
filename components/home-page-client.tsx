@@ -1,5 +1,7 @@
 import { Navigation } from '@/components/navigation';
 import { HeroSection } from '@/components/hero-section';
+import { Manifesto } from '@/components/manifesto';
+import { ProcessCircuit } from '@/components/process-circuit';
 import { ProjectsSection } from '@/components/projects-section';
 import { ServicesSection } from '@/components/services-section';
 import { AboutSection } from '@/components/about-section';
@@ -12,9 +14,10 @@ export function HomePageClient() {
       <Navigation />
       <main>
         <HeroSection />
-        <div className="wrap"><hr className="rule" /></div>
+        <Manifesto />
         <ProjectsSection />
         <ServicesSection />
+        <ProcessCircuit />
         <AboutSection />
         <div className="wrap"><hr className="rule" /></div>
         <ContactSection />

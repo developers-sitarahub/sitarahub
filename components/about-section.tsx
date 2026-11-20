@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Reveal } from '@/components/reveal';
+import { SpotCard } from '@/components/spot-card';
 
 export const principles = [
   {
@@ -19,7 +21,7 @@ export function AboutSection() {
   return (
     <section id="about" className="section">
       <div className="wrap">
-        <div className="section-head">
+        <Reveal className="section-head">
           <p className="label">How we work</p>
           <div>
             <h2 className="h2" style={{ maxWidth: '15em' }}>
@@ -33,17 +35,17 @@ export function AboutSection() {
               </Link>
             </p>
           </div>
-        </div>
+        </Reveal>
 
         <div className="principles">
           {principles.map((p, i) => (
-            <div key={p.title} className="principle">
+            <SpotCard key={p.title} className="principle" delay={i * 0.1}>
               <span className="num">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="h3" style={{ fontSize: '1.55rem', margin: '0.9rem 0 0.75rem' }}>
                 {p.title}
               </h3>
               <p className="body">{p.body}</p>
-            </div>
+            </SpotCard>
           ))}
         </div>
       </div>

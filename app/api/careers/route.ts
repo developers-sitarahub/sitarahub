@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { sendToSheet, backupToCsv } from '@/lib/sheets';
 
-// ==========================================
-// GOOGLE SHEETS CONFIGURATION FOR CAREERS
-// Paste your Google Apps Script Web App URL below to sync submissions online:
-// Example: 'https://script.google.com/macros/s/AKfycbz.../exec'
-// ==========================================
+// Google Apps Script web app that appends each application (and stores the CV) for the careers sheet.
 const GOOGLE_SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzTdS4p6BIAUSxgUxACa_dYvHLvTj46FGl-faBAditW9-E3CCcAdTsQRHMXy7BFgYvdeA/exec';
 
 export async function POST(request: Request) {
@@ -31,80 +28,47 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Save Resume File Locally
-    const resumesDir = path.join(process.cwd(), 'resumes');
-    if (!fs.existsSync(resumesDir)) {
-      fs.mkdirSync(resumesDir, { recursive: true });
-    }
-
-    // Create a safe, unique name on filesystem
-    const sanitizedFilename = resumeFilename.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-    const localFileName = `${Date.now()}_${sanitizedFilename}`;
-    const localFilePath = path.join(resumesDir, localFileName);
-
-    // Convert Base64 back to binary and save
-    const base64Data = resumeBase64.replace(/^data:.*;base64,/, '');
-    fs.writeFileSync(localFilePath, Buffer.from(base64Data, 'base64'));
-
-    // 2. Write details to careers.csv
-    const filePath = path.join(process.cwd(), 'careers.csv');
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
-    const escapeCsv = (val: string) => {
-      const escaped = String(val).replace(/"/g, '""');
-      return `"${escaped}"`;
-    };
-
-    const row = [
-      escapeCsv(timestamp),
-      escapeCsv(name),
-      escapeCsv(email),
-      escapeCsv(phone),
-      escapeCsv(department),
-      escapeCsv(message),
-      escapeCsv(resumeFilename),
-      escapeCsv(`resumes/${localFileName}`)
-    ].join(',');
-
-    let fileExists = false;
+    // 1. Google Sheets is the source of truth: if it fails, tell the applicant instead of losing the application.
     try {
-      fs.accessSync(filePath);
-      fileExists = true;
-    } catch {
-      // File does not exist
+      await sendToSheet(GOOGLE_SHEETS_WEBHOOK_URL, {
+        timestamp,
+        name,
+        email,
+        phone,
+        department,
+        message,
+        resumeBase64,
+        resumeFilename,
+        resumeMimeType,
+      });
+    } catch (err) {
+      console.error('Careers form: Google Sheets sync failed:', err);
+      return NextResponse.json(
+        { error: 'We couldn’t save your application just now. Please try again, or email your CV to developers@sitarahub.com.' },
+        { status: 502 }
+      );
     }
 
-    if (!fileExists) {
-      const headers = 'Timestamp,Full Name,Email Address,Phone Number,Expected Department,Cover Letter,Resume Filename,Local Resume Path\n';
-      fs.writeFileSync(filePath, headers + row + '\n', 'utf8');
-    } else {
-      fs.appendFileSync(filePath, row + '\n', 'utf8');
+    // 2. Local copies of the CV and row (best effort; skipped on read-only hosts like Vercel).
+    let localPath = '';
+    try {
+      const resumesDir = path.join(process.cwd(), 'resumes');
+      fs.mkdirSync(resumesDir, { recursive: true });
+      // Create a safe, unique name on filesystem
+      const localFileName = `${Date.now()}_${resumeFilename.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
+      const base64Data = resumeBase64.replace(/^data:.*;base64,/, '');
+      fs.writeFileSync(path.join(resumesDir, localFileName), Buffer.from(base64Data, 'base64'));
+      localPath = `resumes/${localFileName}`;
+    } catch (err) {
+      console.warn('Local CV backup skipped:', (err as Error).message);
     }
-
-    // 3. Sync to Google Sheets online if Webhook URL is configured
-    if (GOOGLE_SHEETS_WEBHOOK_URL) {
-      try {
-        await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            timestamp,
-            name,
-            email,
-            phone,
-            department,
-            message,
-            resumeBase64,
-            resumeFilename,
-            resumeMimeType
-          }),
-          mode: 'no-cors'
-        });
-      } catch (err) {
-        console.error('Failed to sync to Google Sheets online (Careers):', err);
-        // Do not fail request since local backup file and resume were saved successfully
-      }
-    }
+    backupToCsv(
+      'careers.csv',
+      'Timestamp,Full Name,Email Address,Phone Number,Expected Department,Cover Letter,Resume Filename,Local Resume Path',
+      [timestamp, name, email, phone, department, message, resumeFilename, localPath]
+    );
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
